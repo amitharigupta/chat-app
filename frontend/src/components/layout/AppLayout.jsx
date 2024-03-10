@@ -7,15 +7,16 @@ import { sampleChats } from '../../constants/sample-data'
 import { useParams } from "react-router-dom"
 
 const AppLayout = () => (WrappedComponent) => {
-  const params = useParams()
-  const chatId = params.chatId
-
-  const handleDeleteChat = (e, _id, groupchat) => {
-    e.preventDefault();
-    console.log("Delete Chat", _id, groupchat)
-  }
 
   return (props) => {
+
+    const params = useParams()
+    const chatId = params.chatId
+
+    const handleDeleteChat = (e, _id, groupchat) => {
+      e.preventDefault();
+      console.log("Delete Chat", _id, groupchat)
+    }
     return (
       <>
         <Title />

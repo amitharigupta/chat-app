@@ -16,7 +16,7 @@ const ChatList = ({ w = "100%", chats = [], chatId, onlineUsers = [], newMessage
 
           const isOnline = members?.some((member) => onlineUsers.includes(_id))
           return (
-            <ChatItem newMessageAlert={newMessageAlert} isOnline={isOnline} avatar={avatar} name={name} _id={_id} key={_id} groupChat={groupChat} sameSender={chatId === _id} handleDeleteChatOpen={handleDeleteChat} />
+            <ChatItem newMessageAlert={newMessageAlert} isOnline={isOnline} avatar={avatar} name={name} _id={_id} key={_id} groupChat={groupChat} sameSender={chatId === _id} handleDeleteChat={handleDeleteChat} />
           )
         })
       }
