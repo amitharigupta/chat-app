@@ -1,11 +1,13 @@
 import React from 'react'
 import AppLayout from '../components/layout/AppLayout'
+import { Box, Typography } from '@mui/material';
+import { grayColor } from "../constants/color.js";
 
 const Home = () => {
   return (
-    <div>
-      <h2>Home Page</h2>
-    </div>
+    <Box bgcolor={grayColor} height={"100%"}>
+      <Typography variant={"h5"} p={"2rem"} textAlign={"center"}>Select a Friend to Chat</Typography>
+    </Box>
   )
 }
 
