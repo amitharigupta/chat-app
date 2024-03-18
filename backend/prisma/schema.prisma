@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id              Int        @id @default(autoincrement())
+  name            String     @db.VarChar(191)
+  email           String     @unique @db.VarChar(191)
+  password        String
+  profile         String?
+  is_active       Boolean    @default(true)
+  created_at      DateTime   @default(now())
+  updated_at      DateTime   @default(now())
+  Chats           Chats[]
+  Messages        Messages[]
+  RequestSent     Request[]  @relation("SentRequests")
+  RequestReceived Request[]  @relation("ReceivedRequests")
+}
+
+model Chats {
+  id         Int        @id @default(autoincrement())
+  name       String     @db.VarChar(191)
+  group_chat Boolean    @default(false)
+  user_id    Int
+  creator    Users      @relation(fields: [user_id], references: [id])
+  is_active  Boolean    @default(false)
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now())
+  Messages   Messages[]
+  Members    Members[]
+}
+
+model Members {
+  id         Int        @id @default(autoincrement())
+  public_id  String     @db.VarChar(191)
+  url        String     @db.VarChar(255)
+  is_active  Boolean    @default(false)
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now())
+  Messages   Messages[]
+  Chats      Chats?     @relation(fields: [chatsId], references: [id])
+  chatsId    Int?
+}
+
+model Messages {
+  id            Int         @id @default(autoincrement())
+  user_id       Int
+  sender        Users       @relation(fields: [user_id], references: [id])
+  content       String
+  chat_id       Int
+  chat          Chats       @relation(fields: [chat_id], references: [id])
+  attachment_id Int
+  attachment    Attachments @relation(fields: [attachment_id], references: [id])
+  is_active     Boolean     @default(false)
+  created_at    DateTime    @default(now())
+  updated_at    DateTime    @default(now())
+  Members       Members?    @relation(fields: [membersId], references: [id])
+  membersId     Int?
+}
+
+enum Status {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model Request {
+  id               Int      @id @default(autoincrement())
+  status           Status   @default(PENDING)
+  sender_user_id   Int
+  sender           Users?   @relation("SentRequests", fields: [sender_user_id], references: [id])
+  reciever_user_id Int
+  receiver         Users?   @relation("ReceivedRequests", fields: [reciever_user_id], references: [id])
+  is_active        Boolean  @default(false)
+  created_at       DateTime @default(now())
+  updated_at       DateTime @default(now())
+}
+
+model Attachments {
+  id         Int        @id @default(autoincrement())
+  public_id  String     @db.VarChar(191)
+  url        String     @db.VarChar(255)
+  is_active  Boolean    @default(false)
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now())
+  Messages   Messages[]
+}
