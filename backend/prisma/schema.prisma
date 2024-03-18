@@ -11,14 +11,14 @@ datasource db {
 }
 
 model Users {
-  id              Int        @id @default(autoincrement())
+  id              String     @id @default(uuid())
   name            String     @db.VarChar(191)
   email           String     @unique @db.VarChar(191)
   password        String
   profile         String?
   is_active       Boolean    @default(true)
   created_at      DateTime   @default(now())
-  updated_at      DateTime   @default(now())
+  updated_at      DateTime   @updatedAt
   Chats           Chats[]
   Messages        Messages[]
   RequestSent     Request[]  @relation("SentRequests")
@@ -26,44 +26,44 @@ model Users {
 }
 
 model Chats {
-  id         Int        @id @default(autoincrement())
+  id         String     @id @default(uuid())
   name       String     @db.VarChar(191)
   group_chat Boolean    @default(false)
-  user_id    Int
+  user_id    String
   creator    Users      @relation(fields: [user_id], references: [id])
-  is_active  Boolean    @default(false)
+  is_active  Boolean    @default(true)
   created_at DateTime   @default(now())
-  updated_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
   Messages   Messages[]
   Members    Members[]
 }
 
 model Members {
-  id         Int        @id @default(autoincrement())
+  id         String     @id @default(uuid())
   public_id  String     @db.VarChar(191)
   url        String     @db.VarChar(255)
-  is_active  Boolean    @default(false)
+  is_active  Boolean    @default(true)
   created_at DateTime   @default(now())
-  updated_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
   Messages   Messages[]
   Chats      Chats?     @relation(fields: [chatsId], references: [id])
-  chatsId    Int?
+  chatsId    String?
 }
 
 model Messages {
-  id            Int         @id @default(autoincrement())
-  user_id       Int
+  id            String      @id @default(uuid())
+  user_id       String
   sender        Users       @relation(fields: [user_id], references: [id])
   content       String
-  chat_id       Int
+  chat_id       String
   chat          Chats       @relation(fields: [chat_id], references: [id])
-  attachment_id Int
+  attachment_id String
   attachment    Attachments @relation(fields: [attachment_id], references: [id])
-  is_active     Boolean     @default(false)
+  is_active     Boolean     @default(true)
   created_at    DateTime    @default(now())
-  updated_at    DateTime    @default(now())
+  updated_at    DateTime    @updatedAt
   Members       Members?    @relation(fields: [membersId], references: [id])
-  membersId     Int?
+  membersId     String?
 }
 
 enum Status {
@@ -73,23 +73,23 @@ enum Status {
 }
 
 model Request {
-  id               Int      @id @default(autoincrement())
+  id               String   @id @default(uuid())
   status           Status   @default(PENDING)
-  sender_user_id   Int
+  sender_user_id   String
   sender           Users?   @relation("SentRequests", fields: [sender_user_id], references: [id])
-  reciever_user_id Int
+  reciever_user_id String
   receiver         Users?   @relation("ReceivedRequests", fields: [reciever_user_id], references: [id])
-  is_active        Boolean  @default(false)
+  is_active        Boolean  @default(true)
   created_at       DateTime @default(now())
-  updated_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
 }
 
 model Attachments {
-  id         Int        @id @default(autoincrement())
+  id         String     @id @default(uuid())
   public_id  String     @db.VarChar(191)
   url        String     @db.VarChar(255)
-  is_active  Boolean    @default(false)
+  is_active  Boolean    @default(true)
   created_at DateTime   @default(now())
-  updated_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
   Messages   Messages[]
 }
