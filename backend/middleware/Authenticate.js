@@ -6,7 +6,7 @@ const authMiddleware = (req, res, next) => {
     return res.status(401).json({ status: 401, message: "UnAuthorized" });
   }
 
-  console.log("The token is", authHeader);
+  // console.log("The token is", authHeader);
 
   const token = authHeader.split(" ")[1];
 

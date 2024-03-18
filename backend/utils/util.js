@@ -40,3 +40,12 @@ export const compareValidToken = async (token) => {
     console.log(`Error while validating token ${error}`);
   }
 }
+
+
+export const emitEvent = async (req, event, users, data) => {
+  try {
+    console.log("Emitting event", event);
+  } catch (error) {
+    console.log(`Error while validating token ${error}`);
+  }
+}

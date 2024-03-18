@@ -1,0 +1,4 @@
+const ALERT = "ALERT";
+const PREFETCH_CHATS = "PREFETCH_CHATS";
+
+export { ALERT, PREFETCH_CHATS };
