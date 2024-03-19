@@ -7,6 +7,8 @@ import cors from "cors";
 import { limiter } from "./config/ratelimiter.js";
 const PORT = process.env.PORT || 8000;
 
+import swaggerDoc from "./utils/swagger.js";
+
 // * Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -27,4 +29,7 @@ app.use("/api", ApiRoutes);
 // * Jobs import
 // import "./jobs/index.js";
 
-app.listen(PORT, () => console.log(`Server is running on PORT ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server is running on PORT ${PORT}`);
+  swaggerDoc(app, PORT);
+});

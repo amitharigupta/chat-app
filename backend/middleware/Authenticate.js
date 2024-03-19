@@ -15,6 +15,7 @@ const authMiddleware = (req, res, next) => {
     if (err)
       return res.status(401).json({ status: 401, message: "UnAuthorized" });
     req.user = user;
+    // console.log('req.user', req.user);
     next();
   });
 };

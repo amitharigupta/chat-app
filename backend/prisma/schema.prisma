@@ -19,7 +19,8 @@ model Users {
   is_active       Boolean    @default(true)
   created_at      DateTime   @default(now())
   updated_at      DateTime   @updatedAt
-  Chats           Chats[]
+  CreatedBy       Chats[]    @relation("CreatedBy")
+  Members         Chats[]    @relation("Members")
   Messages        Messages[]
   RequestSent     Request[]  @relation("SentRequests")
   RequestReceived Request[]  @relation("ReceivedRequests")
@@ -30,24 +31,23 @@ model Chats {
   name       String     @db.VarChar(191)
   group_chat Boolean    @default(false)
   user_id    String
-  creator    Users      @relation(fields: [user_id], references: [id])
+  creator    Users      @relation("CreatedBy", fields: [user_id], references: [id])
+  member_id  String
+  members    Users      @relation("Members", fields: [member_id], references: [id])
   is_active  Boolean    @default(true)
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt
   Messages   Messages[]
-  Members    Members[]
 }
 
 model Members {
   id         String     @id @default(uuid())
-  public_id  String     @db.VarChar(191)
-  url        String     @db.VarChar(255)
+  public_id  String?    @db.VarChar(191)
+  url        String?    @db.VarChar(255)
+  Messages   Messages[]
   is_active  Boolean    @default(true)
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt
-  Messages   Messages[]
-  Chats      Chats?     @relation(fields: [chatsId], references: [id])
-  chatsId    String?
 }
 
 model Messages {
@@ -59,11 +59,11 @@ model Messages {
   chat          Chats       @relation(fields: [chat_id], references: [id])
   attachment_id String
   attachment    Attachments @relation(fields: [attachment_id], references: [id])
+  Members       Members?    @relation(fields: [members_id], references: [id])
+  members_id    String?
   is_active     Boolean     @default(true)
   created_at    DateTime    @default(now())
   updated_at    DateTime    @updatedAt
-  Members       Members?    @relation(fields: [membersId], references: [id])
-  membersId     String?
 }
 
 enum Status {

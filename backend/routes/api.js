@@ -7,6 +7,32 @@ import ChatController from "../controllers/ChatController.js";
 
 const router = Router();
 
+/**
+ * @swagger
+ * /api/auth/register
+ * post:
+ * tags:
+ * - User
+ * summary: Register a new user
+ * requestBody:
+ * required: true
+ * content: 
+ * application/json
+ * schema:
+ *  type: object
+ * properties:
+ * name: 
+ * type: string
+ * email: 
+ * type: string
+ * password: 
+ * type: string
+ * password_confirmation: 
+ * type: string
+ * responses:
+ * 200:
+ * Description: New User created successfully
+ */
 router.post("/auth/register", multerUpload.single('profile'), AuthController.register);
 router.post("/auth/login", AuthController.login);
 router.get("/send-email", AuthController.sendTestEmail);

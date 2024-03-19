@@ -1,5 +1,6 @@
 import prisma from "../DB/db.config.js";
 import path from "path";
+import _ from "lodash";
 
 import { ALERT, PREFETCH_CHATS } from "../constants/event.js";
 import { emitEvent } from "../utils/util.js";
@@ -24,8 +25,9 @@ class ChatController {
       }
       let allMembers = [...members, req.user.id];
       let membersArr = [];
+      allMembers = _.uniq(allMembers);
       allMembers.map(i => membersArr.push({ id: i }))
-      console.log('all members :', membersArr);
+      console.log('all members :', _.uniq(membersArr));
       const dataToBeCreated = {
         name,
         group_chat: true,
@@ -34,10 +36,10 @@ class ChatController {
             id: req.user.id
           }
         },
-        Members: { connect: membersArr }
+        members: { connect: membersArr }
       }
 
-      console.log('dataToBeCreated : ', JSON.stringify(dataToBeCreated));
+      // console.log('dataToBeCreated : ', JSON.stringify(dataToBeCreated));
       await prisma.chats.create({ data: dataToBeCreated });
 
       emitEvent(req, ALERT, allMembers, `Welcome to ${name} group`);
