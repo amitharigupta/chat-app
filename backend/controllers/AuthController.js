@@ -31,6 +31,7 @@ class AuthController {
       //   * Encrypt the password
       const salt = bcrypt.genSaltSync(10);
       payload.password = bcrypt.hashSync(payload.password, salt);
+      payload.profile = "https://avatar.iran.liara.run/public/boy";
 
       const user = await prisma.users.create({
         data: payload,
@@ -144,6 +145,30 @@ class AuthController {
       return res
         .status(500)
         .json({ message: "Something went wrong.pls try agian later." });
+    }
+  }
+
+  static async getUserByName(req, res) {
+    try {
+      let { name } = req.query;
+
+      name = name.toLowerCase();
+      console.log(name);
+      let user = await prisma.users.findMany({
+        where: {
+          name: {
+            contains: name, // Search for users whose name contains the query string
+            mode: 'insensitive' // Case insensitive search
+          }
+        }
+      });
+
+      return res.status(200).json({ staus: 200, message: "User fetched By Name successfully", data: user });
+    } catch (error) {
+      logger.error({ type: "Email Error", body: error });
+      return res
+        .status(500)
+        .json({ message: "Something went wrong.pls try agian later. getUserByName" });
     }
   }
 }

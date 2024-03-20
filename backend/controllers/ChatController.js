@@ -36,14 +36,14 @@ class ChatController {
             id: req.user.id
           }
         },
-        members: { connect: membersArr }
+        members: { connect: membersArr[0] }
       }
 
       // console.log('dataToBeCreated : ', JSON.stringify(dataToBeCreated));
       await prisma.chats.create({ data: dataToBeCreated });
 
-      emitEvent(req, ALERT, allMembers, `Welcome to ${name} group`);
-      emitEvent(req, PREFETCH_CHATS, members);
+      // emitEvent(req, ALERT, allMembers, `Welcome to ${name} group`);
+      // emitEvent(req, PREFETCH_CHATS, members);
 
 
       return res.status(201).json({
@@ -68,7 +68,7 @@ class ChatController {
  */
   static async getMyChats(req, res, next) {
     try {
-      const chats = await prisma.chats.findMany({ where: { Members: { some: { id: req.user.id } } } });
+      const chats = await prisma.chats.findMany({ where: { members: { id: req.user.id } } });
 
       return res.status(200).json({ status: 200, message: chats });
     } catch (error) {

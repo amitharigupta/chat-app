@@ -65,6 +65,21 @@ class ProfileController {
   }
 
   static async destroy() { }
+
+  static async getMyProfile(req, res, next) {
+    try {
+      let { id } = req.params;
+
+      let user = await prisma.users.findUnique({ where: { id: id } });
+
+      return res.status(200).json({ status: 200, message: "User Profile fetched successfully", data: user });
+    } catch (error) {
+      console.log("The error is getMyProfile", error);
+      return res
+        .status(500)
+        .json({ message: "Something went wrong.please try again! getMyProfile" });
+    }
+  }
 }
 
 export default ProfileController;

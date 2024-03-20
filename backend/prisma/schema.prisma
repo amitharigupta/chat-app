@@ -20,10 +20,11 @@ model Users {
   created_at      DateTime   @default(now())
   updated_at      DateTime   @updatedAt
   CreatedBy       Chats[]    @relation("CreatedBy")
-  Members         Chats[]    @relation("Members")
+  // Members         Chats[]    @relation("Members")
   Messages        Messages[]
   RequestSent     Request[]  @relation("SentRequests")
   RequestReceived Request[]  @relation("ReceivedRequests")
+  Chats           Chats[]
 }
 
 model Chats {
@@ -32,23 +33,25 @@ model Chats {
   group_chat Boolean    @default(false)
   user_id    String
   creator    Users      @relation("CreatedBy", fields: [user_id], references: [id])
-  member_id  String
-  members    Users      @relation("Members", fields: [member_id], references: [id])
+  // member_id  String
+  // members    Users      @relation("Members", fields: [member_id], references: [id])
   is_active  Boolean    @default(true)
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt
   Messages   Messages[]
+  Users      Users?     @relation(fields: [usersId], references: [id])
+  usersId    String?
 }
 
-model Members {
-  id         String     @id @default(uuid())
-  public_id  String?    @db.VarChar(191)
-  url        String?    @db.VarChar(255)
-  Messages   Messages[]
-  is_active  Boolean    @default(true)
-  created_at DateTime   @default(now())
-  updated_at DateTime   @updatedAt
-}
+// model Members {
+//   id         String     @id @default(uuid())
+//   public_id  String?    @db.VarChar(191)
+//   url        String?    @db.VarChar(255)
+//   Messages   Messages[]
+//   is_active  Boolean    @default(true)
+//   created_at DateTime   @default(now())
+//   updated_at DateTime   @updatedAt
+// }
 
 model Messages {
   id            String      @id @default(uuid())
@@ -59,7 +62,7 @@ model Messages {
   chat          Chats       @relation(fields: [chat_id], references: [id])
   attachment_id String
   attachment    Attachments @relation(fields: [attachment_id], references: [id])
-  Members       Members?    @relation(fields: [members_id], references: [id])
+  // Members       Members?    @relation(fields: [members_id], references: [id])
   members_id    String?
   is_active     Boolean     @default(true)
   created_at    DateTime    @default(now())

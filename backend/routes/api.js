@@ -35,11 +35,13 @@ const router = Router();
  */
 router.post("/auth/register", multerUpload.single('profile'), AuthController.register);
 router.post("/auth/login", AuthController.login);
+router.get("/auth/user/search", authMiddleware, AuthController.getUserByName); // To get user details by name
 router.get("/send-email", AuthController.sendTestEmail);
 
 // * Profile routes
 router.get("/profile", authMiddleware, ProfileController.index); //Private route
 router.put("/profile/:id", authMiddleware, ProfileController.update); //Private route
+router.get("/profile/:id", authMiddleware, ProfileController.getMyProfile); //Private route
 
 
 // * Chat Routes
